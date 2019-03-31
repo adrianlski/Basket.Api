@@ -1,4 +1,5 @@
-﻿using BasketApi.Services;
+﻿using BasketApi.Dtos;
+using BasketApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,16 @@ namespace BasketApi.Controllers
             }
 
             return Ok(basket);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddItemToBasket(int customerId, ItemToAddDto item)
+        {
+            if (!_basketService.AddItemToBasket(customerId, item))
+            {
+                return BadRequest("Couldn't add item to the basktet");
+            }
+
         }
     }
 }
