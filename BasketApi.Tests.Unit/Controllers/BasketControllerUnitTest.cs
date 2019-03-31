@@ -1,4 +1,5 @@
 ﻿using BasketApi.Controllers;
+using BasketApi.Dtos;
 using BasketApi.Models;
 using BasketApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,18 +13,17 @@ using System.Threading.Tasks;
 namespace BasketApi.Tests.Unit.Controllers
 {
     [TestFixture]
-    public class BasketControllerUnitTest
+    public class BasketControllerUnitTest : TestBase
     {
         private BasketController _sut;
-        private Randomizer _randomizer;
+        
         private Mock<IBasketService> _basketServiceMock;
-        private const int MAX_VALUE = 1000;
+        
 
         [SetUp]
         public void SetUp()
         {
             _basketServiceMock = new Mock<IBasketService>();
-            _randomizer = new Randomizer(Guid.NewGuid().GetHashCode());
             _sut = new BasketController(_basketServiceMock.Object);
         }
 
@@ -31,7 +31,7 @@ namespace BasketApi.Tests.Unit.Controllers
         public async Task GetBasketCallsBasketServiceWithCustomerId()
         {
             // Arrange
-            var customerId = _randomizer.Next(MAX_VALUE);
+            var customerId = GetRandomInt();
             var basket = GetBasket(customerId);
             _basketServiceMock.Setup(x => x.GetBasket(customerId)).ReturnsAsync(basket);
 
@@ -46,7 +46,7 @@ namespace BasketApi.Tests.Unit.Controllers
         public async Task GetBasketReturnsOkResult()
         {
             // Arrange
-            var customerId = _randomizer.Next(MAX_VALUE);
+            var customerId = GetRandomInt();
             var basket = GetBasket(customerId);
             _basketServiceMock.Setup(x => x.GetBasket(customerId)).ReturnsAsync(basket);
 
@@ -61,7 +61,7 @@ namespace BasketApi.Tests.Unit.Controllers
         public async Task GetBasketReturnsNoContentIfNoItemsInBasket()
         {
             // Arrange
-            var customerId = _randomizer.Next(MAX_VALUE);
+            var customerId = GetRandomInt();
             var basket = GetEmptyBasket();
             _basketServiceMock.Setup(x => x.GetBasket(customerId)).ReturnsAsync(basket);
 
@@ -76,7 +76,7 @@ namespace BasketApi.Tests.Unit.Controllers
         public async Task GetBasketReturnsBasket()
         {
             // Arrange
-            var customerId = _randomizer.Next(MAX_VALUE);
+            var customerId = GetRandomInt();
             var basket = GetBasket(customerId);
             _basketServiceMock.Setup(x => x.GetBasket(customerId)).ReturnsAsync(basket);
 
@@ -88,14 +88,14 @@ namespace BasketApi.Tests.Unit.Controllers
             Assert.IsInstanceOf<OkObjectResult>(result);
         }
 
-        private List<BasketItem> GetBasket(int customerId)
+        private BasketToReturnDto GetBasket(int customerId)
         {
-            return new List<BasketItem> { new BasketItem { CustomerId = customerId } };
+            return new BasketToReturnDto { CustomerId = customerId };
         }
 
-        private List<BasketItem> GetEmptyBasket()
+        private BasketToReturnDto GetEmptyBasket()
         {
-            return new List<BasketItem>();
+            return new BasketToReturnDto();
         }
     }
 }

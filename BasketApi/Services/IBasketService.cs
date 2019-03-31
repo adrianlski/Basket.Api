@@ -1,4 +1,5 @@
-﻿using BasketApi.Models;
+﻿using BasketApi.Dtos;
+using BasketApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace BasketApi.Services
 {
     public interface IBasketService
     {
-        Task<List<BasketItem>> GetBasket(int customerId);
+        Task<BasketToReturnDto> GetBasket(int customerId);
     }
 }

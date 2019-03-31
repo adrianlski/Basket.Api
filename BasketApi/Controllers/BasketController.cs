@@ -22,7 +22,7 @@ namespace BasketApi.Controllers
         {
             var basket = await _basketService.GetBasket(customerId);
 
-            if (!basket.Any())
+            if (!basket.Items.Any())
             {
                 return NoContent();
             }
