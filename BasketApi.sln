@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasketApi", "BasketApi\BasketApi.csproj", "{661C6EA9-8C0D-4F45-8861-7D00FE9172F7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{661C6EA9-8C0D-4F45-8861-7D00FE9172F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{661C6EA9-8C0D-4F45-8861-7D00FE9172F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{661C6EA9-8C0D-4F45-8861-7D00FE9172F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{661C6EA9-8C0D-4F45-8861-7D00FE9172F7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FC736296-BB3C-4130-8522-4D583E511909}
+	EndGlobalSection
+EndGlobal
