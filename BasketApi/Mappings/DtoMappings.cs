@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BasketApi.Mappings.Resolvers;
 
 namespace BasketApi.Mappings
 {
@@ -13,7 +14,10 @@ namespace BasketApi.Mappings
         public DtoMappings()
         {
             CreateMap<List<BasketItem>, BasketToReturnDto>()
-                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.FirstOrDefault().CustomerId));
+                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.FirstOrDefault().CustomerId))
+                .ForMember(dest => dest.Items, opts => opts.MapFrom<BasketToReturnDtoResolver>());
+
+            CreateMap<ItemToAddDto, BasketItem>();
         }
     }
 }

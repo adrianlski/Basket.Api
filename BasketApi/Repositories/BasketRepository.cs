@@ -18,7 +18,18 @@ namespace BasketApi.Repositories
 
         public async Task<IEnumerable<BasketItem>> GetMany(int customerId)
         {
-            return await _dataContext.BasketItems.Where(x => x.CustomerId == customerId).ToListAsync();
+            var items =  await _dataContext.BasketItems.Include(i => i.Item).Where(x => x.CustomerId == customerId).ToListAsync();
+            return items;
+        }
+
+        public void Add(BasketItem item)
+        {
+            _dataContext.Add(item);
+        }
+
+        public async Task<bool> SaveAll()
+        {
+            return await _dataContext.SaveChangesAsync() > 0;
         }
     }
 }

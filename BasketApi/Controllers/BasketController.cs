@@ -31,14 +31,15 @@ namespace BasketApi.Controllers
             return Ok(basket);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddItemToBasket(int customerId, ItemToAddDto item)
+        [HttpPost("{customerId}")]
+        public async Task<IActionResult> AddItemToBasket(int customerId,[FromBody] ItemToAddDto itemToAddDto)
         {
-            if (!_basketService.AddItemToBasket(customerId, item))
+            if (await _basketService.AddItemToBasket(customerId, itemToAddDto))
             {
-                return BadRequest("Couldn't add item to the basktet");
+                return Ok();
             }
 
+            return BadRequest("Couldn't add item to the basket");
         }
     }
 }

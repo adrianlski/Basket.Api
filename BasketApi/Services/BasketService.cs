@@ -27,5 +27,15 @@ namespace BasketApi.Services
 
             return basketToReturn;
         }
+
+        public async Task<bool> AddItemToBasket(int customerId, ItemToAddDto itemToAddDto)
+        {
+            var basketItem = _mapper.Map<ItemToAddDto, BasketItem>(itemToAddDto);
+            basketItem.CustomerId = customerId;
+
+            _basketRepository.Add(basketItem);
+
+            return await _basketRepository.SaveAll();
+        }
     }
 }

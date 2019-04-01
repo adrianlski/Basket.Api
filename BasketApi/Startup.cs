@@ -1,4 +1,7 @@
-﻿using BasketApi.Data;
+﻿using AutoMapper;
+using BasketApi.Data;
+using BasketApi.Models;
+using BasketApi.Repositories;
 using BasketApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,12 +26,14 @@ namespace BasketApi
         {
             services.AddDbContext<DataContext>(options => options.UseInMemoryDatabase("Basket"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddAutoMapper();
             RegisterServices(services);
         }
 
         private void RegisterServices(IServiceCollection services)
         {
             services.AddScoped<IBasketService, BasketService>();
+            services.AddScoped<IRepository<BasketItem>, BasketRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

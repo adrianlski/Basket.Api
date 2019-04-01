@@ -10,6 +10,6 @@ namespace BasketApi.Services
     public interface IBasketService
     {
         Task<BasketToReturnDto> GetBasket(int customerId);
-        bool AddItemToBasket(int customerId, ItemToAddDto item);
+        Task<bool> AddItemToBasket(int customerId, ItemToAddDto itemToAddDto);
     }
 }
