@@ -88,9 +88,63 @@ namespace BasketApi.Tests.Unit.Controllers
             Assert.IsInstanceOf<OkObjectResult>(result);
         }
 
+        [Test]
+        public async Task AddItemToBasketCallsBasketServiceWithCustomerIdAndItem()
+        {
+            // Arrange
+            var customerId = GetRandomInt();
+            var itemToAddDto = GetItemToAddDto();
+
+            // Act
+            await _sut.AddItemToBasket(customerId, itemToAddDto);
+
+            // Assert
+            _basketServiceMock.Verify(x => x.AddItemToBasket(customerId, itemToAddDto), Times.Once);
+        }
+
+        [Test]
+        public async Task AddItemToBasketReturnsNoContentWhenAddingSuccesful()
+        {
+            // Arrange
+            var customerId = GetRandomInt();
+            var itemToAddDto = GetItemToAddDto();
+            _basketServiceMock.Setup(x => x.AddItemToBasket(customerId, itemToAddDto)).ReturnsAsync(true);
+
+            // Act
+            var result = await _sut.AddItemToBasket(customerId, itemToAddDto);
+
+            // Assert
+            Assert.IsInstanceOf<NoContentResult>(result);
+        }
+
+        [Test]
+        public async Task AddItemToBasketReturnsBadRequestWhenAddingUnsuccseful()
+        {
+            // Arrange
+            var customerId = GetRandomInt();
+            var itemToAddDto = GetItemToAddDto();
+            _basketServiceMock.Setup(x => x.AddItemToBasket(customerId, itemToAddDto)).ReturnsAsync(false);
+
+            // Act
+            var result = await _sut.AddItemToBasket(customerId, itemToAddDto);
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+        }
+
+
+        private ItemToAddDto GetItemToAddDto()
+        {
+            return new ItemToAddDto
+            {
+                ItemId = GetRandomInt(),
+                Quantity = GetRandomInt()
+            };
+        }
+
         private BasketToReturnDto GetBasket(int customerId)
         {
-            return new BasketToReturnDto { CustomerId = customerId };
+            return new BasketToReturnDto { CustomerId = customerId , Items = new List<ItemToReturnDto> { new ItemToReturnDto() } };
         }
 
         private BasketToReturnDto GetEmptyBasket()

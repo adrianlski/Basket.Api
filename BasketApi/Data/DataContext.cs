@@ -9,7 +9,10 @@ namespace BasketApi.Data
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        {
+            this.Database.EnsureCreated();
+        }
 
         public DbSet<BasketItem> BasketItems { get; set; }
         public DbSet<Item> Items { get; set; }
@@ -17,7 +20,7 @@ namespace BasketApi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            
             modelBuilder.Entity<Item>().HasData(
                 new Item { Id = 1, Name = "Book" }, 
                 new Item { Id = 2, Name = "CD" },

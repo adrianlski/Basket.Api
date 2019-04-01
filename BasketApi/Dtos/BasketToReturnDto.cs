@@ -6,5 +6,10 @@ namespace BasketApi.Dtos
     {
         public int CustomerId { get; set; }
         public List<ItemToReturnDto> Items { get; set; }
+
+        public BasketToReturnDto()
+        {
+            Items = new List<ItemToReturnDto>();
+        }
     }
 }

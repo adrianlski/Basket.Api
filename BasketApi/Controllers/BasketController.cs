@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 namespace BasketApi.Controllers
 {
     [Route("/api/[controller]")]
-    public class BasketController : Controller
+    [ApiController]
+    public class BasketController : ControllerBase
     {
         private readonly IBasketService _basketService;
 
@@ -19,7 +20,7 @@ namespace BasketApi.Controllers
         }
 
         [HttpGet("{customerId}", Name = "GetBasket")]
-        public async Task<IActionResult> GetBasket (int customerId)
+        public async Task<IActionResult> GetBasket(int customerId)
         {
             var basket = await _basketService.GetBasket(customerId);
 
@@ -32,14 +33,42 @@ namespace BasketApi.Controllers
         }
 
         [HttpPost("{customerId}")]
-        public async Task<IActionResult> AddItemToBasket(int customerId,[FromBody] ItemToAddDto itemToAddDto)
+        public async Task<IActionResult> AddItemToBasket(int customerId, [FromBody] ItemToAddDto itemToAddDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("The item is invalid");
+            }
+
             if (await _basketService.AddItemToBasket(customerId, itemToAddDto))
             {
-                return Ok();
+                return NoContent();
             }
 
             return BadRequest("Couldn't add item to the basket");
+        }
+
+        [HttpPut("{customerId}")]
+        public async Task<IActionResult> UpdateItemInTheBasket(int customerId, [FromBody] ItemToUpdateDto itemToUpdateDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("The item is invalid");
+            }
+
+            if (await _basketService.UpdateBasketItem(customerId, itemToUpdateDto))
+            {
+                return NoContent();
+            }
+
+            return BadRequest("Couldn't update item in the basket");
+
+        }
+
+        [HttpDelete("{customerId}")]
+        public async Task<IActionResult> DeleteBasket(int customerId)
+        {
+            return Ok();
         }
     }
 }

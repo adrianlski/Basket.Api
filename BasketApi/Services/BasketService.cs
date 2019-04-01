@@ -22,7 +22,7 @@ namespace BasketApi.Services
 
         public async Task<BasketToReturnDto> GetBasket(int customerId)
         {
-            var items = await _basketRepository.GetMany(customerId);
+            var items = await _basketRepository.GetManyAsync(x => x.CustomerId == customerId);
             var basketToReturn = _mapper.Map<BasketToReturnDto>(items);
 
             return basketToReturn;
@@ -30,12 +30,22 @@ namespace BasketApi.Services
 
         public async Task<bool> AddItemToBasket(int customerId, ItemToAddDto itemToAddDto)
         {
-            var basketItem = _mapper.Map<ItemToAddDto, BasketItem>(itemToAddDto);
-            basketItem.CustomerId = customerId;
+            if (await _basketRepository.ExistsAsync(x => x.CustomerId == customerId && x.ItemId == itemToAddDto.ItemId))
+            {
+                return true;
+            }
 
-            _basketRepository.Add(basketItem);
+            var basketToSave = _mapper.Map<ItemToAddDto, BasketItem>(itemToAddDto);
+            basketToSave.CustomerId = customerId;
 
-            return await _basketRepository.SaveAll();
+            _basketRepository.Add(basketToSave);
+
+            return await _basketRepository.SaveAllAsync();
+        }
+
+        public Task<bool> UpdateBasketItem(int customerId, ItemToUpdateDto itemToUpdateDto)
+        {
+            throw new NotImplementedException();
         }
     }
 }
