@@ -1,5 +1,7 @@
-﻿using BasketApi.Models;
+﻿using System;
+using BasketApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.InMemory.ValueGeneration.Internal;
 
 namespace BasketApi.Data
 {
@@ -16,11 +18,24 @@ namespace BasketApi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
-            modelBuilder.Entity<Item>().HasData(
-                new Item { Id = 1, Name = "Book" }, 
-                new Item { Id = 2, Name = "CD" },
-                new Item { Id = 3, Name = "DVD" });
+
+            SeedData(modelBuilder);
+        }
+
+        private void SeedData(ModelBuilder modelBuilder)
+        {
+            var items = GetSeedItems();
+            modelBuilder.Entity<Item>().HasData(items);
+        }
+
+        private Item[] GetSeedItems()
+        {
+            return new Item[]
+            {
+                new Item { Id = 1, Name = "Book", Price = 35.0m },
+                new Item { Id = 2, Name = "CD", Price = 20.0m },
+                new Item { Id = 3, Name = "DVD", Price = 14.0m }
+            };
         }
     }
 }

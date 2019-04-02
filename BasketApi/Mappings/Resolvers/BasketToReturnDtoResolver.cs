@@ -17,7 +17,8 @@ namespace BasketApi.Mappings.Resolvers
                 {
                     ItemId = item.Item.Id,
                     ItemName = item.Item.Name,
-                    Quantity = item.Quantity
+                    Quantity = item.Quantity,
+                    ItemPrice = item.Item.Price,
                 });
             }
 
