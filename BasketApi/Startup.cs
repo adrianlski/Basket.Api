@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using BasketApi.Data;
 using BasketApi.Models;
 using BasketApi.Repositories;

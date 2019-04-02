@@ -1,7 +1,5 @@
 ﻿using NUnit.Framework.Internal;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BasketApi.Tests.Unit
 {

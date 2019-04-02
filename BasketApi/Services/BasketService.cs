@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using BasketApi.Dtos;
+using BasketApi.Exceptions;
 using BasketApi.Models;
 using BasketApi.Repositories;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace BasketApi.Services
 {
@@ -32,7 +31,7 @@ namespace BasketApi.Services
         {
             if (await _basketRepository.ExistsAsync(x => x.CustomerId == customerId && x.ItemId == itemToAddDto.ItemId))
             {
-                return true;
+                throw new ItemExistsInTheBasketException();
             }
 
             var basketToSave = _mapper.Map<ItemToAddDto, BasketItem>(itemToAddDto);
@@ -43,9 +42,47 @@ namespace BasketApi.Services
             return await _basketRepository.SaveAllAsync();
         }
 
-        public Task<bool> UpdateBasketItem(int customerId, ItemToUpdateDto itemToUpdateDto)
+        public async Task<bool> RemoveItemFromBasktet(int customerId, int itemId)
         {
-            throw new NotImplementedException();
+            var itemToRemove = await _basketRepository.GetOneAsync(x => x.CustomerId == customerId && x.ItemId == itemId);
+
+            if (itemToRemove == null)
+            {
+                throw new ItemNotInTheBasketException();
+            }
+
+            _basketRepository.DeleteOne(itemToRemove);
+
+            return await _basketRepository.SaveAllAsync();
+        }
+
+        public async Task<bool> UpdateBasketItem(int customerId, ItemToUpdateDto itemToUpdateDto)
+        {
+            var itemFromRepo = await _basketRepository.GetOneAsync(x => x.CustomerId == customerId && x.ItemId == itemToUpdateDto.ItemId);
+
+            if (itemFromRepo == null)
+            {
+                throw new ItemNotInTheBasketException();
+            }
+
+            var item = _mapper.Map(itemToUpdateDto, itemFromRepo);
+            item.CustomerId = customerId;
+
+            return await _basketRepository.SaveAllAsync();
+        }
+
+        public async Task<bool> ClearBasket(int customerId)
+        {
+            var items = await _basketRepository.GetManyAsync(x => x.CustomerId == customerId);
+
+            if (!items.Any())
+            {
+                return true;
+            }
+            
+            _basketRepository.DeleteRange(items);
+
+            return await _basketRepository.SaveAllAsync();
         }
     }
 }

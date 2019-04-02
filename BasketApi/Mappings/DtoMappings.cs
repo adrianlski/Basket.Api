@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using BasketApi.Dtos;
 using BasketApi.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BasketApi.Mappings.Resolvers;
 
 namespace BasketApi.Mappings
@@ -18,6 +16,7 @@ namespace BasketApi.Mappings
                 .ForMember(dest => dest.Items, opts => opts.MapFrom<BasketToReturnDtoResolver>());
 
             CreateMap<ItemToAddDto, BasketItem>();
+            CreateMap<ItemToUpdateDto, BasketItem>();
         }
     }
 }

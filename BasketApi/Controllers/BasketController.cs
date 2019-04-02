@@ -1,10 +1,10 @@
-﻿using BasketApi.Dtos;
+﻿using System;
+using BasketApi.Dtos;
 using BasketApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BasketApi.Exceptions;
 
 namespace BasketApi.Controllers
 {
@@ -35,23 +35,52 @@ namespace BasketApi.Controllers
         [HttpPost("{customerId}")]
         public async Task<IActionResult> AddItemToBasket(int customerId, [FromBody] ItemToAddDto itemToAddDto)
         {
-            if (!ModelState.IsValid)
+            if (itemToAddDto == null || !ModelState.IsValid)
             {
                 return BadRequest("The item is invalid");
             }
 
-            if (await _basketService.AddItemToBasket(customerId, itemToAddDto))
+            try
             {
-                return NoContent();
-            }
+                var result = await _basketService.AddItemToBasket(customerId, itemToAddDto);
 
-            return BadRequest("Couldn't add item to the basket");
+                if (result)
+                {
+                    return Ok();
+                }
+
+                return BadRequest("Couldn't add item to the basket");
+            }
+            catch (ItemExistsInTheBasketException e)
+            {
+                return BadRequest("Item already exists in the basket");
+            }
+        }
+
+        [HttpDelete("{customerId}/item/{itemId}")]
+        public async Task<IActionResult> RemoveItemFromBasket(int customerId, int itemId)
+        {
+            try
+            {
+                var result = await _basketService.RemoveItemFromBasktet(customerId, itemId);
+
+                if (result)
+                {
+                    return Ok();
+                }
+
+                return BadRequest("Couldn't remove item from the basket");
+            }
+            catch (ItemNotInTheBasketException e)
+            {
+                return BadRequest("Item not found in the basket");
+            }
         }
 
         [HttpPut("{customerId}")]
         public async Task<IActionResult> UpdateItemInTheBasket(int customerId, [FromBody] ItemToUpdateDto itemToUpdateDto)
         {
-            if (!ModelState.IsValid)
+            if (itemToUpdateDto == null || !ModelState.IsValid)
             {
                 return BadRequest("The item is invalid");
             }
@@ -62,13 +91,17 @@ namespace BasketApi.Controllers
             }
 
             return BadRequest("Couldn't update item in the basket");
-
         }
 
         [HttpDelete("{customerId}")]
-        public async Task<IActionResult> DeleteBasket(int customerId)
+        public async Task<IActionResult> ClearBasket(int customerId)
         {
-            return Ok();
+            if (await _basketService.ClearBasket(customerId))
+            {
+                return Ok();
+            }
+
+            return BadRequest("Couldn't update item in the basket");
         }
     }
 }

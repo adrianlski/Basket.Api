@@ -1,13 +1,13 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using BasketApi.Dtos;
 using BasketApi.Models;
 using BasketApi.Repositories;
 using BasketApi.Services;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BasketApi.Tests.Unit.Services
@@ -62,7 +62,7 @@ namespace BasketApi.Tests.Unit.Services
             var customerId = GetRandomInt();
             var items = GetBasketItems();
             var itemsDto = GetBasketItemsDto();
-            _repositoryMock.Setup(x => x.GetManyAsync(y => y.CustomerId == customerId)).ReturnsAsync(items);
+            _repositoryMock.Setup(x => x.GetManyAsync(It.IsAny<Expression<Func<BasketItem, bool>>>())).ReturnsAsync(items);
             _mapperMock.Setup(x => x.Map<BasketToReturnDto>(items)).Returns(itemsDto);
 
             // Act
@@ -74,13 +74,13 @@ namespace BasketApi.Tests.Unit.Services
         }
 
         [Test]
-        public async Task AddItemToBasketCallsRepository()
+        public async Task AddItemThrowsExceptionIfItemExistsInRepo()
         {
             // Arrange
             var customerId = GetRandomInt();
             var itemToAdd = GetItemToAdd();
             var itemId = GetRandomInt();
-
+            //_repositoryMock.Setup(x => x.ExistsAsync(It.IsAny<Expresion>()))
 
             // Act
             await _sut.AddItemToBasket(customerId, itemToAdd);

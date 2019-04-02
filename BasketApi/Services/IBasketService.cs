@@ -1,8 +1,4 @@
 ﻿using BasketApi.Dtos;
-using BasketApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BasketApi.Services
@@ -11,5 +7,8 @@ namespace BasketApi.Services
     {
         Task<BasketToReturnDto> GetBasket(int customerId);
         Task<bool> AddItemToBasket(int customerId, ItemToAddDto itemToAddDto);
+        Task<bool> RemoveItemFromBasktet(int customerId, int itemId);
+        Task<bool> UpdateBasketItem(int customerId, ItemToUpdateDto itemToUpdateDto);
+        Task<bool> ClearBasket(int customerId);
     }
 }

@@ -24,12 +24,6 @@ namespace BasketApi.Repositories
             _dataContext.Add(item);
         }
 
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _dataContext.SaveChangesAsync() > 0;
-        }
-
-
         public async Task<IEnumerable<BasketItem>> GetManyAsync(Expression<Func<BasketItem, bool>> predicate)
         {
             return await _dataContext.BasketItems.Include(i => i.Item).Where(predicate).ToListAsync();
@@ -48,6 +42,21 @@ namespace BasketApi.Repositories
             }
                 
             return false;
+        }
+
+        public void DeleteOne (BasketItem entity)
+        {
+            _dataContext.BasketItems.Remove(entity);
+        }
+
+        public void DeleteRange(IEnumerable<BasketItem> items)
+        {
+           _dataContext.BasketItems.RemoveRange(items);
+        }
+
+        public async Task<bool> SaveAllAsync()
+        {
+            return await _dataContext.SaveChangesAsync() > 0;
         }
     }
 }
