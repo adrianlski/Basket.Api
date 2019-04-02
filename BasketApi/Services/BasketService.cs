@@ -42,20 +42,6 @@ namespace BasketApi.Services
             return await _basketRepository.SaveAllAsync();
         }
 
-        public async Task<bool> RemoveItemFromBasktet(int customerId, int itemId)
-        {
-            var itemToRemove = await _basketRepository.GetOneAsync(x => x.CustomerId == customerId && x.ItemId == itemId);
-
-            if (itemToRemove == null)
-            {
-                throw new ItemNotInTheBasketException();
-            }
-
-            _basketRepository.DeleteOne(itemToRemove);
-
-            return await _basketRepository.SaveAllAsync();
-        }
-
         public async Task<bool> UpdateBasketItem(int customerId, ItemToUpdateDto itemToUpdateDto)
         {
             var itemFromRepo = await _basketRepository.GetOneAsync(x => x.CustomerId == customerId && x.ItemId == itemToUpdateDto.ItemId);
@@ -67,6 +53,20 @@ namespace BasketApi.Services
 
             var item = _mapper.Map(itemToUpdateDto, itemFromRepo);
             item.CustomerId = customerId;
+
+            return await _basketRepository.SaveAllAsync();
+        }
+
+        public async Task<bool> RemoveItemFromBasktet(int customerId, int itemId)
+        {
+            var itemToRemove = await _basketRepository.GetOneAsync(x => x.CustomerId == customerId && x.ItemId == itemId);
+
+            if (itemToRemove == null)
+            {
+                throw new ItemNotInTheBasketException();
+            }
+
+            _basketRepository.DeleteOne(itemToRemove);
 
             return await _basketRepository.SaveAllAsync();
         }

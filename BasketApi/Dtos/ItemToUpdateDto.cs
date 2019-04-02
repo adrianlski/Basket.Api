@@ -5,7 +5,7 @@ namespace BasketApi.Dtos
     public class ItemToUpdateDto
     {
         public int ItemId { get; set; }
-        [MinLength(1)]
+        [Range(1, int.MaxValue)]
         public int Quantity { get; set; }
     }
 }
